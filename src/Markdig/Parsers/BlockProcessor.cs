@@ -263,7 +263,7 @@ public class BlockProcessor
     }
 
     /// <summary>
-    /// Restarts the indent from the current position.
+    /// Restarts the indent from the current position. 是说这个indent已经分析过了，可以继续处理之后的内容了。
     /// </summary>
     public void RestartIndent()
     {
@@ -280,7 +280,7 @@ public class BlockProcessor
     {
         var c = CurrentChar;
         var previousStartBeforeIndent = StartBeforeIndent;
-        var startBeforeIndent = Start;
+        var startBeforeIndent = Start; // 什么时候Start != StartBeforeIndent, 比如在TryConitnue的时候已经ParseIndent过了，但是parser选择了skip，下一次ParserIndent就会出现这种情况，算是optimize?
         var previousColumnBeforeIndent = ColumnBeforeIndent;
         var columnBeforeIndent = Column;
         while (c != '\0')
@@ -613,12 +613,13 @@ public class BlockProcessor
             {
                 var currentContainer = Unsafe.As<ContainerBlock>(block);
                 CurrentContainer = currentContainer;
-                LastBlock = currentContainer.LastChild;
+                LastBlock = currentContainer.LastChild; // LastBlock有可能已经被close了，比如list中的blankline，但是CurrentBlock还是open的
                 CurrentBlock = currentBlock;
                 return;
             }
         }
 
+        // not reachable as we have openedBlocks[0].Block.IsContainerBlock === true?
         CurrentBlock = currentBlock;
         LastBlock = null;
     }
@@ -671,6 +672,7 @@ public class BlockProcessor
                 break;
             }
 
+            // 以list item为例，一行文字会导致result = continue，但是文字本身还没经过任何的处理
             RestartIndent();
 
             // In case the BlockParser has modified the BlockProcessor we are iterating on
@@ -743,6 +745,8 @@ public class BlockProcessor
     private void TryOpenBlocks()
     {
         int previousStart = -1;
+        // 比如说
+        // 1. List, List第一轮会解析出List+ListItem但是不会解析ListItem内部的内容
         while (ContinueProcessingLine)
         {
             // Security check so that the parser can't go into a crazy infinite loop if one extension is messing
@@ -800,6 +804,7 @@ public class BlockProcessor
                     LinesBefore.Add(line);
                     Line.Start = StartBeforeIndent;
                 }
+                // 这个会导致一些block的close，比如para之后的一个blankline会导致643行设置的IsOpen = false没被设成true导致para被close
                 ContinueProcessingLine = false;
                 break;
             }
@@ -918,6 +923,7 @@ public class BlockProcessor
                         }
                     }
 
+                    // 对于param这个column是前面
                     Unsafe.As<LeafBlock>(block).AppendLine(ref Line, Column, LineIndex, CurrentLineStartPosition, TrackTrivia);
                 }
 

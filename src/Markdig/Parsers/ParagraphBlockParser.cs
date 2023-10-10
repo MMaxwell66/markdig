@@ -82,6 +82,7 @@ public class ParagraphBlockParser : BlockParser
             {
                 for (int i = 0; i < lineCount; i++)
                 {
+                    // Leading spaces or tabs are skipped:
                     lines.Lines[i].Slice.TrimStart();
                 }
                 lines.Lines[lineCount - 1].Slice.TrimEnd();

@@ -167,6 +167,8 @@ public class MiscTests
     [Test]
     public void TestThematicInsideCodeBlockInsideList()
     {
+        // 这个parse中的一些细节：
+        // 1. 第二行的blankline导致para block没能重新open所以para被close了。
         var input = @"1. In the :
 
    ```

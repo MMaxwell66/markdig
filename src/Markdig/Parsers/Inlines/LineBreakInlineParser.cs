@@ -24,7 +24,7 @@ public class LineBreakInlineParser : InlineParser
     /// <summary>
     /// Gets or sets a value indicating whether to interpret softline breaks as hardline breaks. Default is false
     /// </summary>
-    public bool EnableSoftAsHard { get; set; }
+    public bool EnableSoftAsHard { get; set; } // This will be useful
 
     public override bool Match(InlineProcessor processor, ref StringSlice slice)
     {

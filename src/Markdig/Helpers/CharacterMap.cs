@@ -23,8 +23,8 @@ public sealed class CharacterMap<T> where T : class
     private readonly Vector128<byte> _asciiBitmap;
 #endif
 
-    private readonly T[] asciiMap;
-    private readonly Dictionary<uint, T>? nonAsciiMap;
+    private readonly T[] asciiMap; // asciiMap[(char)c] => parser[]
+    private readonly Dictionary<uint, T>? nonAsciiMap; // nonAsciiMap[(char)c] => parser[]
     private readonly BoolVector128 isOpeningCharacter;
 
     /// <summary>

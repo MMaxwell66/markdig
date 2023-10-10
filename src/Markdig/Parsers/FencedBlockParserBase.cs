@@ -31,7 +31,7 @@ public abstract class FencedBlockParserBase : BlockParser, IAttributesParseable
     /// <summary>
     /// A delegates that allows to process attached attributes
     /// </summary>
-    public TryParseAttributesDelegate? TryParseAttributes { get; set; }
+    public TryParseAttributesDelegate? TryParseAttributes { get; set; } // might be interesting
 }
 
 /// <summary>

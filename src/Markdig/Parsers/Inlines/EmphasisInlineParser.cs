@@ -154,7 +154,7 @@ public class EmphasisInlineParser : InlineParser, IPostInlineProcessor
         if (processor.Inline is HtmlEntityInline htmlEntityInline)
         {
             if (htmlEntityInline.Transcoded.Length > 0)
-            {
+            {   // TOCHECK: example
                 pc = htmlEntityInline.Transcoded[htmlEntityInline.Transcoded.End];
             }
         }

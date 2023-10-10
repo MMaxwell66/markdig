@@ -55,6 +55,7 @@ public static class MarkdownParser
 
             ProcessBlocks(blockProcessor, new LineReader(text));
 
+            // 这段应该是吧最后的trivia assign给一个block
             if (pipeline.TrackTrivia)
             {
                 Block? lastBlock = blockProcessor.LastBlock;

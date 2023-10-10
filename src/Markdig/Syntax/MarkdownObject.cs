@@ -10,6 +10,16 @@ namespace Markdig.Syntax;
 
 /// <summary>
 /// Base implementation for a the Markdown syntax tree.
+/// 
+/// Stores the following information
+///   1. line & column
+///      a source span
+///      a key-value collection + Trivia
+///   flags:
+///      container
+///      inline
+///      IsClosedInternal
+///      InternalSpareBit
 /// </summary>
 public abstract class MarkdownObject : IMarkdownObject
 {

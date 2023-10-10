@@ -28,6 +28,9 @@ public class HtmlRenderer : TextRendererBase<HtmlRenderer>
     /// <param name="writer">The writer.</param>
     public HtmlRenderer(TextWriter writer) : base(writer)
     {
+        // if renderer.Accept(this, obj.GetType())
+        // renderer.Write(this, obj)
+
         // Default block renderers
         ObjectRenderers.Add(new CodeBlockRenderer());
         ObjectRenderers.Add(new ListRenderer());

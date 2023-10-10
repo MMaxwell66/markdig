@@ -21,6 +21,8 @@ public enum BlockState
 
     /// <summary>
     /// The parser accepts a line and instruct to continue.
+    ///
+    /// example: `block.IsOpen = result.IsContinue();` BlockProcessor.cs
     /// </summary>
     Continue,
 

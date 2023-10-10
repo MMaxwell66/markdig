@@ -77,7 +77,7 @@ public class ListBlockParser : BlockParser
     {
         if (block is ListBlock && processor.NextContinue is ListItemBlock)
         {
-            // We try to match only on item block if the ListBlock
+            // We try to match only on item block
             return BlockState.Skip;
         }
 
@@ -85,7 +85,7 @@ public class ListBlockParser : BlockParser
         // interpretations of a line, the thematic break takes precedence
         BlockState result;
         var thematicParser = ThematicBreakParser.Default;
-        if (processor.LastBlock is not FencedCodeBlock && thematicParser.HasOpeningCharacter(processor.CurrentChar))
+        if (processor.LastBlock is not FencedCodeBlock && thematicParser.HasOpeningCharacter(processor.CurrentChar)) // TOCHECK: is FencedCodeBlock 是什么情况，code block在item中？
         {
             result = thematicParser.TryOpen(processor);
             if (result.IsBreak())
@@ -169,7 +169,7 @@ public class ListBlockParser : BlockParser
         {
             if (state.Indent > columnWidth && state.IsCodeIndent)
             {
-                state.GoToColumn(state.ColumnBeforeIndent + columnWidth);
+                state.GoToColumn(state.  + columnWidth); // TOCHECK: what is this case
             }
 
             // Update list-item source end position
@@ -188,6 +188,7 @@ public class ListBlockParser : BlockParser
         var currentParent = block as ListBlock ?? (ListBlock)currentListItem?.Parent!;
 
         // We can early exit if we have a code indent and we are either (1) not in a ListItem, (2) preceded by a blank line, (3) in an unordered list
+        // Q: 会不会出现 "1.    2."这种情况？ A: 不会，因为在parse第一个的时候有 Indent > 4 的check
         if (state.IsCodeIndent && (currentListItem is null || currentListItem.LastChild is BlankLineBlock || !currentParent.IsOrdered))
         {
             return BlockState.None;
@@ -248,6 +249,7 @@ public class ListBlockParser : BlockParser
 
             // We expect at most 4 columns after
             // If we have more, we reset the position
+            // > a list marker of width W followed by 1 ≤ N ≤ 4 spaces of indentation
             if (state.Indent > 4)
             {
                 state.GoToColumn(columnBeforeIndent + 1);
@@ -256,7 +258,7 @@ public class ListBlockParser : BlockParser
             // Number of spaces required for the following content to be part of this list item
             // If the list item starts with a blank line, the number of spaces
             // following the list marker doesn't change the required indentation
-            columnWidth = (state.IsBlankLine ? columnBeforeIndent : state.Column) - initColumnBeforeIndent;
+            columnWidth = (state.IsBlankLine ? columnBeforeIndent /* + 1 */ : state.Column) - initColumnBeforeIndent;
         }
 
         // Starts/continue the list unless:
@@ -326,7 +328,7 @@ public class ListBlockParser : BlockParser
 
             if (state.TrackTrivia)
             {
-                newList.LinesBefore = state.UseLinesBefore();
+                newList.LinesBefore = state.UseLinesBefore(); // should be null as we used linesBefore at 290?
             }
 
             state.NewBlocks.Push(newList);
